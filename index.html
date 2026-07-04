@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why I Love You: A Journal for Nandini</title>
+    <!-- Romantic Handwriting & Modern Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #fff5f6;
+            --primary-pink: #ffb7c5;
+            --dark-pink: #ff6b8b;
+            --text-dark: #4a3b32;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* Diary Container & Page Setup */
+        .diary-container {
+            width: 90%;
+            max-width: 500px;
+            height: 85vh;
+            min-height: 580px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(255, 183, 197, 0.4);
+            position: relative;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 4px solid #fff;
+            outline: 2px dashed var(--primary-pink);
+            outline-offset: -10px;
+        }
+
+        .page {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Typography */
+        h1 {
+            font-family: 'Caveat', cursive;
+            font-size: 2.8rem;
+            color: var(--dark-pink);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .note-text {
+            font-family: 'Caveat', cursive;
+            font-size: 1.7rem;
+            line-height: 1.4;
+            color: #5c4a3e;
+            margin: 12px 0;
+            padding: 0 10px;
+        }
+
+        .disclaimer-box {
+            background: #fff0f2;
+            border: 2px dashed var(--dark-pink);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        /* Polaroid Effect Setup */
+        .img-container {
+            width: 75%;
+            max-width: 260px;
+            background: white;
+            padding: 12px 12px 30px 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+            border: 1px solid #eee;
+            transform: rotate(-2deg);
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .img-container::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: 45%;
+            width: 30px;
+            height: 12px;
+            background-color: rgba(255, 215, 0, 0.7); /* Gold pin tape look */
+            border-radius: 2px;
+            transform: rotate(5deg);
+        }
+
+        .img-container.tilt-right {
+            transform: rotate(3deg);
+        }
+
+        .diary-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        /* Navigation Buttons */
+        .nav-btn {
+            background-color: var(--primary-pink);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            font-size: 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(255, 183, 197, 0.5);
+            align-self: center;
+            margin-top: auto;
+        }
+
+        .nav-btn:hover {
+            background-color: var(--dark-pink);
+            transform: translateY(-2px);
+        }
+
+        /* Interactive Proposal Screen Settings */
+        .btn-wrapper {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            position: relative;
+            margin-top: 25px;
+            height: 60px;
+        }
+
+        .choice-btn {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.3s ease, font-size 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        #yesBtn {
+            background-color: #ff8fa3;
+            color: white;
+            z-index: 10;
+        }
+
+        #yesBtn.enlarged {
+            position: absolute;
+            left: 50% !important;
+            top: 50% !important;
+            transform: translate(-50%, -50%) scale(1.6);
+            background-color: var(--dark-pink);
+            box-shadow: 0 10px 25px rgba(255, 107, 139, 0.5);
+            font-size: 1.5rem;
+        }
+
+        #noBtn {
+            background-color: #ffe0e6;
+            color: var(--dark-pink);
+            position: relative;
+            transition: all 0.15s ease;
+        }
+
+        /* Full Screen Fireworks Canvas */
+        #fireworksCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 999;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="fireworksCanvas"></canvas>
+
+    <div class="diary-container">
+        
+        <!-- PAGE 1: COVER & THE CUSTOM DISCLAIMER -->
+        <div class="page active" id="page1">
+            <h1>Why I Love You</h1>
+            <p style="font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase; color: #aaa;">A Journal by Abhinav</p>
+            <p style="font-family: 'Caveat', cursive; font-size: 1.6rem; color: var(--dark-pink); margin-bottom: 5px;">Just for Nandini 💖</p>
+            
+            <div class="disclaimer-box">
+                <p style="font-size: 1.1rem; line-height: 1.5; color: #66554b; font-family: 'Poppins', sans-serif;">
+                    "The photos and texts shown in this diary have been crafted with so much love that they carry a side effect: You are about to fall even deeper in love with Abhinav. Proceed only if you're ready for your heart to melt completely! 🥰"
+                </p>
+            </div>
+            <button class="nav-btn" onclick="nextPage(2)" style="margin-top: 20px;">Proceed at Your Own Risk ❤️</button>
+        </div>
+
+        <!-- PAGE 2: THE TRANSITION -->
+        <div class="page" id="page2">
+            <div class="img-container">
+                <img src="page2.jpg" alt="Our Moments" class="diary-img">
+            </div>
+            <p class="note-text">"Honestly, before you came along, I never realized how much brighter everything could be. You walked into my life and suddenly every playlist made sense, every little thing reminded me of you, and my days got a whole lot happier. You became my absolute favorite thought, and looking back, I wouldn't have it any other way."</p>
+            <button class="nav-btn" onclick="nextPage(3)">Turn Page 👉</button>
+        </div>
+
+        <!-- PAGE 3: BREATHTAKING ELEGANCE -->
+        <div class="page" id="page3">
+            <div class="img-container tilt-right">
+                <img src="1000047686.jpg" alt="Breathtaking Elegance" class="diary-img">
+            </div>
+            <p class="note-text">"Okay, but seriously, how can anyone look this breathtaking? You completely own this traditional look, and that gentle smile is doing things to my heart. Every single detail here is just perfect. You look like a literal queen, and I'm just sitting here wondering how I got blessed with the most beautiful girl in the world."</p>
+            <button class="nav-btn" onclick="nextPage(4)">Turn Page 👉</button>
+        </div>
+
+        <!-- PAGE 4: ADORABLE DRAMA -->
+        <div class="page" id="page4">
+            <div class="img-container">
+                <img src="1000049091.jpg" alt="Adorable Pout" class="diary-img">
+            </div>
+            <p class="note-text">"And here comes the drama! I swear, you have the most adorable pout in the entire world. One second you're looking like a literal queen, and the next you're making this cute face that completely melts me. You're entirely too cute for your own good."</p>
+            <button class="nav-btn" onclick="nextPage(5)">Final Page ❤️</button>
+        </div>
+
+        <!-- PAGE 5: THE PROPOSAL & THE TRAP -->
+        <div class="page" id="page5">
+            <h1 style="font-size: 2.2rem; margin-bottom: 5px;">The Final Chapter 💍</h1>
+            <p class="note-text" id="proposalText" style="font-size: 1.45rem; line-height: 1.4;">"From the moments that leave me speechless to the ones that completely melt my heart, every single second with you has led to this. Nandini, you are my today, my tomorrow, and my entire forever. I don’t just want to make memories with you; I want to build a whole lifetime with you. सो, right here, on the last page of this diary and the beginning of our next chapter... Will you be mine forever?"</p>
+            
+            <div class="btn-wrapper" id="btnWrapper">
+                <button class="choice-btn" id="yesBtn" onclick="handleYes()">YES</button>
+                <button class="choice-btn" id="noBtn">NO</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let noClickCount = 0;
+        const maxNoAttempts = 5;
+
+        function nextPage(pageNumber) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(`page${pageNumber}`).classList.add('active');
+        }
+
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const btnWrapper = document.getElementById('btnWrapper');
+
+        // Runaway Button Engine (Instantly teleports No on hover or touch)
+        function escapeNoButton() {
+            noClickCount++;
+            
+            if (noClickCount >= maxNoAttempts) {
+                noBtn.style.display = 'none';
+                yesBtn.classList.add('enlarged');
+                return;
+            }
+
+            // Stays inside viewport limitations safely
+            const padding = 30;
+            const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+            const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+            const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
+
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = `${randomX}px`;
+            noBtn.style.top = `${randomY}px`;
+            noBtn.style.zIndex = '999';
+        }
+
+        noBtn.addEventListener('mouseenter', escapeNoButton);
+        noBtn.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            escapeNoButton();
+        });
+
+        // The Success Finale Animation Sequence
+        function handleYes() {
+            document.getElementById('proposalText').style.display = 'none';
+            btnWrapper.style.display = 'none';
+            
+            const page5 = document.getElementById('page5');
+            page5.querySelector('h1').innerText = "Yesss! 🎉";
+            
+            const successNote = document.createElement('p');
+            successNote.className = 'note-text';
+            successNote.style.fontSize = '2.2rem';
+            successNote.style.color = 'var(--dark-pink)';
+            successNote.style.lineHeight = '1.3';
+            successNote.innerText = "Please text me madam ji I am waiting for ur reply on my dm";
+            page5.appendChild(successNote);
+
+            startFireworks();
+        }
+
+        /* High-Performance Canvas Fireworks Generator */
+        const canvas = document.getElementById('fireworksCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function startFireworks() {
+            canvas.style.display = 'block';
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            animateFireworks();
+            setInterval(spawnFirework, 350);
+        }
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.radius = Math.random() * 3 + 1;
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 6 + 2;
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed;
+                this.alpha = 1;
+                this.decay = Math.random() * 0.015 + 0.012;
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.restore();
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vy += 0.04; // Gravity physics gravity tracking
+                this.alpha -= this.decay;
+            }
+        }
+
+        function spawnFirework() {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * (canvas.height * 0.6);
+            const colors = ['#ff6b8b', '#ffb7c5', '#ff8fa3', '#ffcad4', '#ffd166', '#fff0f2'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            for (let i = 0; i < 45; i++) {
+                particles.push(new Particle(x, y, randomColor));
+            }
+        }
+
+        function animateFireworks() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles = particles.filter(p => p.alpha > 0);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateFireworks);
+        }
+    </script>
+</body>
+</html>
